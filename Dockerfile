@@ -12,18 +12,15 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-FROM node:alpine
-LABEL maintainer="philippe_mulet@fr.ibm.com"
+FROM golang
+LABEL maintainer="akshaykumar.vijapur@ibm.com"
 
-RUN apk update && apk upgrade
+RUN apt-get update
+WORKDIR /app
+COPY app.go /app/app.go
+RUN go mod init myapp
+RUN go build
 
-# Install the application
-ADD package.json /app/package.json
-RUN cd /app && npm install
-COPY app.js /app/app.js
-
-# Support to for arbitrary UserIds
-# https://docs.openshift.com/container-platform/3.11/creating_images/guidelines.html#openshift-specific-guidelines
 RUN chmod -R u+x /app && \
     chgrp -R 0 /app && \
     chmod -R g=u /app /etc/passwd
@@ -43,4 +40,4 @@ EXPOSE 8080
 # RUN dpkg --purge --force-all <package>
 
 # Define command to run the application when the container starts
-CMD ["node", "app.js"]
+ENTRYPOINT [ "/app/myapp" ] 

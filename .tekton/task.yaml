@@ -236,4 +236,10 @@ spec:
           while read line; do export $line; done < /artifacts/build.properties;
           cp /artifacts/build.properties .;
           cd /workspace && source deploy-to-kubernetes.sh;
+
+
+          task :
+            1. Login to vm(server) [ SSH keys and secrets{credentials}]
+            2. Download the artificats (Biniraies and scripts)
+            3. source the script and install the binaries 
       
